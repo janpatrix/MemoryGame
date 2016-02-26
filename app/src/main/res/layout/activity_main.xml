@@ -25,9 +25,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="High Score: 999"
         android:id="@+id/textHiScore"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="193dp" />
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -36,9 +36,8 @@
         android:src="@android:mipmap/sym_def_app_icon"
         android:minWidth="150dp"
         android:minHeight="150dp"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp" />
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/textHiScore" />
 
     <Button
         android:layout_width="wrap_content"

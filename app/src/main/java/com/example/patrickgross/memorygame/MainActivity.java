@@ -12,12 +12,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button buttonPlay = (Button)findViewById(R.id.buttonPlay);
+        buttonPlay.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        Button buttonPlay = (Button)findViewById(R.id.buttonPlay);
-        buttonPlay.setOnClickListener(this);
         Intent i = new Intent(this, GameActivity.class);
         startActivity(i);
     }

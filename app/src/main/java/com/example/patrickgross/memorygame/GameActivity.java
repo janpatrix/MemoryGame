@@ -1,6 +1,7 @@
 package com.example.patrickgross.memorygame;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
@@ -11,6 +12,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -44,10 +46,23 @@ public class GameActivity extends Activity implements View.OnClickListener{
     int playerScore;
     boolean isResponding;
 
+    //Highscore
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
+    String dataName = "MyData";
+    String intName = "MyInt";
+    int defaultInt = 0;
+    int highScore;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        prefs = getSharedPreferences(dataName, MODE_PRIVATE);
+        editor = prefs.edit();
+        highScore = prefs.getInt(intName, defaultInt);
 
         //Set Sound
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
@@ -156,9 +171,61 @@ public class GameActivity extends Activity implements View.OnClickListener{
         isResponding = true;
     }
 
+    public void checkElement(int thisElement){
+
+        if(isResponding) {
+            playerResponses++;
+            if (sequenceToCopy[playerResponses-1] == thisElement) {
+                playerScore = playerScore + ((thisElement + 1) * 2);
+                userScore.setText("Score: " + playerScore);
+                if (playerResponses == difficultyLevel) {
+                    isResponding = false;
+                    difficultyLevel++;
+                    difficultyText.setText("Level: " + difficultyLevel);
+                    playASequence();
+                }
+            } else {
+                watchText.setText("FAILED!");
+                isResponding = false;
+                if(playerScore > highScore){
+                    highScore = playerScore;
+                    editor.putInt(intName, highScore);
+                    editor.commit();
+                    Toast.makeText(getApplicationContext(), "New Highscore!" + highScore, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
     @Override
     public void onClick(View v) {
 
+        if (!playSequence){
+            switch(v.getId()){
+                case R.id.button1:
+                    soundPool.play(sample1, 1, 1, 0, 0, 1);
+                    checkElement(1);
+                    break;
+                case R.id.button2:
+                    soundPool.play(sample2, 1, 1, 0, 0, 1);
+                    checkElement(2);
+                    break;
+                case R.id.button3:
+                    soundPool.play(sample3, 1, 1, 0, 0, 1);
+                    checkElement(3);
+                    break;
+                case R.id.button4:
+                    soundPool.play(sample4, 1, 1, 0, 0, 1);
+                    checkElement(4);
+                    break;
+                case R.id.buttonReplay:
+                    difficultyLevel = 3;
+                    playerScore = 0;
+                    userScore.setText("Score: " + playerScore);
+                    playASequence();
+                    break;
+            }
+        }
     }
 }
 
